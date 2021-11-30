@@ -5,12 +5,13 @@ let classesSelected = [];
 async function loadCourseData() {
     return $.get('/scheduler/data', (data) => {
         courseData = data['courses'];
+        courseData = courseData.filter((c) => c['days'] !== 'TBA');
     });
 }
 
 
 function getCourseString(c) {
-    return c['Mnemonic'] + ' ' + c['Number'] + '-' + c['Section'] + ': ' + c['Title'] + ' - ' + c['Instructor(s)'];
+    return c['Mnemonic'] + ' ' + c['Number'] + '-' + c['Section'] + ': ' + c['Title'] + ' (' + c['Units'] + ' Credits)' + ' - ' + c['Instructor(s)'];
 }
 
 
@@ -32,7 +33,6 @@ function addClass() {
     const uvaClass = getClass(document.getElementById('mnemonic-select').value,
                               document.getElementById('course-select').value,
                               document.getElementById('section-select').value);
-    console.log(uvaClass);
     if (uvaClass != null && classesSelected.find(
             (c) => c['Mnemonic'] === uvaClass['Mnemonic'] &&
                    c['Number'] === uvaClass['Number'] &&
@@ -111,11 +111,25 @@ window.addEventListener('load', async function() {
 
 function onGenerateClicked() {
     $.post('/scheduler/generate', { 'classesSelected': JSON.stringify(classesSelected) }, (result) => {
+        let allClasses = result['allClasses']
+        colorMap = {};
+        let colorI = 0;
+        allClasses.forEach((c) => {
+            colorMap[c['class_num']] = colorI;
+            if (colorI === maxColorIndex) {
+                colorI = 0;
+            } else {
+                colorI++;
+            }
+        });
+
         schedules = result['schedules'];
         currentScheduleIndex = 0;
-        if (schedules.length > 0) {
-            loadSchedule(schedules[0]['classes']);
+
+        if (schedules.length === 0) {
+            schedules.push({ 'classes': [] })
         }
+        loadSchedule(schedules[0]['classes']);
     });
 }
 
@@ -123,11 +137,9 @@ function onGenerateClicked() {
 // ****************************** Schedule ******************************
 
 let schedules = [];
-
-let currentColorIndex = 0;
-let maxColorIndex = 4;
-
 let currentScheduleIndex = 0;
+let colorMap = {};
+let maxColorIndex = 4;
 
 
 function loadNextSchedule() {
@@ -153,8 +165,6 @@ function loadPreviousSchedule() {
 
 
 function loadSchedule(s) {
-    console.log(s)
-    currentColorIndex = 0;
     const days = {
         'MO': [],
         'TU': [],
@@ -164,7 +174,6 @@ function loadSchedule(s) {
     }
     s.forEach((c) => {
         buildAllClassBlocks(c).forEach((b) => {
-            console.log(b);
             let [k, blockHTML] = b;
             days[k].push(blockHTML);
         });
@@ -174,6 +183,11 @@ function loadSchedule(s) {
          days[k].forEach((s) => innerHTML += s);
          document.getElementById(k).innerHTML = innerHTML;
     });
+    if (schedules[0]['classes'].length === 0) {
+        document.getElementById('schedule-header').innerText = 'My Schedule Options (0)';
+    } else {
+        document.getElementById('schedule-header').innerText = 'My Schedule Options (' + (currentScheduleIndex + 1) + ' of ' + schedules.length + ')';
+    }
 }
 
 
@@ -212,8 +226,8 @@ function buildSingleClassBlock(name, timeStr, start, end, colorIndex) {
 
 
 function buildAllClassBlocks(c) {
-    let [dayStr, timeStr, start, end] = parseDayTime(c.days);
-    const colorIndex = getNextColorIndex();
+    let [dayStr, timeStr, start, end] = parseDayTime(c['days']);
+    const colorIndex = colorMap[c['class_num']];
     const result = [];
 
     if (dayStr.includes('MO')) {
@@ -232,14 +246,4 @@ function buildAllClassBlocks(c) {
         result.push(['FR', buildSingleClassBlock(c.name, timeStr, start, end, colorIndex)]);
     }
     return result;
-}
-
-
-function getNextColorIndex() {
-    if (currentColorIndex === maxColorIndex) {
-        currentColorIndex = 0;
-    } else {
-        currentColorIndex++;
-    }
-    return currentColorIndex;
 }
