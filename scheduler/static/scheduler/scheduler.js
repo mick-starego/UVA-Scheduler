@@ -32,6 +32,7 @@ function addClass() {
     const uvaClass = getClass(document.getElementById('mnemonic-select').value,
                               document.getElementById('course-select').value,
                               document.getElementById('section-select').value);
+    console.log(uvaClass);
     if (uvaClass != null && classesSelected.find(
             (c) => c['Mnemonic'] === uvaClass['Mnemonic'] &&
                    c['Number'] === uvaClass['Number'] &&
@@ -103,68 +104,25 @@ window.addEventListener('load', async function() {
 
         updateSelects();
     });
-
-    // TODO remove
-    loadSchedule(mockSchedules[0]);
 });
+
+
+// ******************* Retrieve generated schedules *********************
+
+function onGenerateClicked() {
+    $.post('/scheduler/generate', { 'classesSelected': JSON.stringify(classesSelected) }, (result) => {
+        schedules = result['schedules'];
+        currentScheduleIndex = 0;
+        if (schedules.length > 0) {
+            loadSchedule(schedules[0]['classes']);
+        }
+    });
+}
 
 
 // ****************************** Schedule ******************************
 
-const mockSchedules = [
-    [
-        {
-            name: 'CS 2150-002',
-            days: 'Tu 6:00pm - 6:50pm'
-        },
-        {
-            name: 'CS 3330-001',
-            days: 'MoWeFr 10:00am - 10:50am'
-        },
-        {
-            name: 'APMA 3100-003',
-            days: 'TuTh 9:30am - 10:45am'
-        },
-        {
-            name: 'MSE 2090-001',
-            days: 'Fr 9:00am - 9:50am'
-        },
-        {
-            name: 'STS 1500-010',
-            days: 'Th 1:00pm - 1:50pm'
-        }
-    ],
-    [
-        {
-            name: 'CS 4620-001',
-            days: 'TuTh 11:00am - 12:15pm'
-        },
-        {
-            name: 'CS 4710-001',
-            days: 'TuTh 5:00pm - 6:15pm'
-        },
-        {
-            name: 'STS 4500-007',
-            days: 'MoWe 3:00pm - 4:45pm'
-        },
-        {
-            name: 'CS 4414-001',
-            days: 'MoWe 5:00pm - 6:15pm'
-        }
-    ],
-    [
-        {
-            name: 'CS 2110-002',
-            days: 'MoWeFr 10:00am - 10:50am'
-        }
-    ],
-    [
-        {
-            name: 'CS 2150-001',
-            days: 'MoWe 1:00pm - 2:15pm'
-        }
-    ]
-];
+let schedules = [];
 
 let currentColorIndex = 0;
 let maxColorIndex = 4;
@@ -173,26 +131,29 @@ let currentScheduleIndex = 0;
 
 
 function loadNextSchedule() {
-    if (currentScheduleIndex === mockSchedules.length - 1) {
+    if (schedules.length === 0) return;
+    if (currentScheduleIndex === schedules.length - 1) {
         currentScheduleIndex = 0;
     } else {
         currentScheduleIndex++;
     }
-    loadSchedule(mockSchedules[currentScheduleIndex]);
+    loadSchedule(schedules[currentScheduleIndex]['classes']);
 }
 
 
 function loadPreviousSchedule() {
+    if (schedules.length === 0) return;
     if (currentScheduleIndex === 0) {
-        currentScheduleIndex = mockSchedules.length - 1;
+        currentScheduleIndex = schedules.length - 1;
     } else {
         currentScheduleIndex--;
     }
-    loadSchedule(mockSchedules[currentScheduleIndex]);
+    loadSchedule(schedules[currentScheduleIndex]['classes']);
 }
 
 
 function loadSchedule(s) {
+    console.log(s)
     currentColorIndex = 0;
     const days = {
         'MO': [],
@@ -232,6 +193,9 @@ function parseTime(s) {
  * @returns {{dayStr, start: *, end: *}}
  */
 function parseDayTime(s) {
+    if (s === 'TBA') {
+        return ['TBA', 0, 0];
+    }
     let [dayStr, start, _, end] = s.split(' ');
     return [dayStr.toUpperCase(), (start + ' - ' + end), parseTime(start), parseTime(end)];
 }

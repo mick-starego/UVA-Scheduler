@@ -45,7 +45,9 @@
             </ul>
         </div>
         <div class="flex-end generate-btn-container">
-            <button id="gen-btn" class="btn btn-success" disabled>Generate Schedules</button>
+            <button id="gen-btn" class="btn btn-success" disabled onclick="onGenerateClicked()">
+                Generate Schedules
+            </button>
         </div>
 
         <h3 class="schedule-header">
@@ -82,16 +84,7 @@
                     <span class="hour" style="top: 737px">8</span>
                 </div>
                 <div class="calendar-main">
-                    <div id="MO" class="calendar-day">
-                        <div class="class-block color-0">
-                            <span class="class-name">APMA 3080-001</span>
-                            <span class="class-time">12:00pm-1:00pm</span>
-                        </div>
-                        <div class="class-block color-0">
-                            <span class="class-name">CS 2150-001</span>
-                            <span class="class-time">11:00am-11:50am</span>
-                        </div>
-                    </div>
+                    <div id="MO" class="calendar-day"></div>
                     <div id="TU" class="calendar-day"></div>
                     <div id="WE" class="calendar-day"></div>
                     <div id="TH" class="calendar-day"></div>

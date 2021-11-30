@@ -3,6 +3,10 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import pandas as pd
 import os
+import json
+from django.views.decorators.csrf import csrf_exempt
+
+from scheduler.utils import UVAClass, UVASchedule
 
 
 def index(request):
@@ -10,7 +14,27 @@ def index(request):
 
 
 def get_course_data(request):
-    df = pd.read_csv(os.path.join(settings.STATIC_ROOT, 'external/course-data.csv'))[["ClassNumber", "Mnemonic", "Number", "Section", "Title", "Instructor(s)", "Units"]]
-    df.set_index("ClassNumber", drop=True, inplace=True)
+    df = pd.read_csv(os.path.join(settings.STATIC_ROOT, 'external/course-data.csv'))[["ClassNumber", "Mnemonic", "Number", "Section", "Days", "Title", "Instructor(s)", "Units"]]
+    df.set_index("ClassNumber", drop=False, inplace=True)
     df_as_dict = df.to_dict(orient="index")
     return JsonResponse({'courses': [v for v in df_as_dict.values()]})
+
+
+@csrf_exempt
+def get_possible_schedules(request):
+    uva_classes = []
+    for c in json.loads(request.POST.get('classesSelected')):
+        uva_classes.append(UVAClass(c['ClassNumber'], c['Mnemonic'] + " " + str(c['Number']) + "-" + str(c['Section']), c['Days'], c['Units']))
+
+    # Generate schedules
+    schedules = generate_schedules(uva_classes)
+
+    return JsonResponse({"schedules": [{"classes": [vars(c) for c in s.classes]} for s in schedules]})
+
+
+def generate_schedules(uva_classes):
+    # TODO
+    # For now, this returns a singleton list of a schedule that contains all
+    # classes passed as input. When implemented, this method will generate a list
+    # of all schedules that meet the constraints listed in the UVASchedule docstring.
+    return [UVASchedule(uva_classes)]
