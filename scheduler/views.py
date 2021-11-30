@@ -16,7 +16,7 @@ def index(request):
 
 
 def get_course_data(request):
-    df = pd.read_csv(os.path.join(settings.STATIC_ROOT, 'external/course-data.csv'))[["ClassNumber", "Mnemonic", "Number", "Section", "Days", "Title", "Instructor(s)", "Units"]]
+    df = pd.read_csv('https://raw.githubusercontent.com/mick-starego/dummy-repo/master/dummy-repo/course-data.csv')[["ClassNumber", "Mnemonic", "Number", "Section", "Days", "Title", "Instructor(s)", "Units"]]
     df.set_index("ClassNumber", drop=False, inplace=True)
     df_as_dict = df.to_dict(orient="index")
     return JsonResponse({'courses': [v for v in df_as_dict.values()]})
