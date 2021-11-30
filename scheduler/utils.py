@@ -36,6 +36,11 @@ class UVASchedule:
         if init_classes is None:
             init_classes = []
         self.classes = init_classes
+    def __str__(self):
+        temp=[]
+        for i in self.classes:
+            temp.append(str(i))
+        return '\n'.join(temp)
 
     def add_class(self, class_num):
         """

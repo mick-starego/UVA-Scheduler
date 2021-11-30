@@ -37,4 +37,28 @@ def generate_schedules(uva_classes):
     # For now, this returns a singleton list of a schedule that contains all
     # classes passed as input. When implemented, this method will generate a list
     # of all schedules that meet the constraints listed in the UVASchedule docstring.
-    return [UVASchedule(uva_classes)]
+    creds=0
+    temp=[]
+    schedules=[]
+    for i in uva_classes:
+        if(creds < 18 and creds+int(i.units)<=18):
+            temp.append(i)
+            creds+=int(i.units)
+            #print(creds)
+            #print(temp)  
+        if(creds<18 and creds>=15):
+            #print(1)
+            #print(creds)
+            #print(temp)
+            schedules.append(UVASchedule(temp))
+         
+        elif(creds==18):
+            #print(2)
+            schedules.append(UVASchedule(temp))
+
+    #print(len(schedules))
+    #for j in schedules:
+        #print(j)
+        #print("new")
+    return schedules #[UVASchedule(uva_classes)]
+
