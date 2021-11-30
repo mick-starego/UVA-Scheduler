@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-zfb^3hm76z$sn^vqels7z#%j@*xq39uj8sr_+7%nmrvbapyn-5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['uva-schedule-builder.herokuapp.com']
 
 
 # Application definition
