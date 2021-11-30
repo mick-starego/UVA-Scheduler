@@ -1,0 +1,39 @@
+form {
+    margin-top: 1rem;
+}
+
+.pane-container {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 5%;
+}
+
+.plus-icon {
+    cursor: pointer;
+    filter: invert(19%) sepia(85%) saturate(2030%) hue-rotate(198deg) brightness(99%) contrast(95%);
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-end {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.wish-list {
+    max-height: 500px;
+    overflow: auto;
+    -webkit-box-shadow: 2px 2px 27px -7px rgba(0,0,0,0.24);
+    box-shadow: 2px 2px 27px -7px rgba(0,0,0,0.24);
+    border-radius: 3px;
+}
+
+.generate-btn-container {
+    margin-top: 1.5rem;
+}

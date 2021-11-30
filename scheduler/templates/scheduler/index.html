@@ -1,0 +1,106 @@
+{%  load static %}
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/f0348d91da.js" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{% static 'external/Sortable.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'scheduler/scheduler.css' %}">
+    <title>UVA Class Scheduler</title>
+</head>
+
+{%  block content %}
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">UVA Course Scheduler</a>
+    </nav>
+    <div class="pane-container">
+        <h3>My Wish List</h3>
+        <form>
+            <div class="form-group form-row">
+                <div class="col-md-2">
+                    <select class="form-control" id="mnemonic-select" onchange="updateSelects(true)">
+{#                      Will be filled by JS#}
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <select class="form-control" id="course-select" onchange="updateSelects(false)">
+{#                      Will be filled by JS#}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-control" id="section-select">
+{#                      Will be filled by JS#}
+                    </select>
+                </div>
+                <div class="col-md-1 center">
+                    <i class="far fa-plus-square fa-2x plus-icon" onclick="addClass()"></i>
+                </div>
+            </div>
+        </form>
+        <div id="placeholder" class="placeholder"><i>Click the "+" to add a class to your Wish List.</i></div>
+        <div class="wish-list">
+            <ul id="class-list" class="list-group">
+{#                Will be filled by JS#}
+            </ul>
+        </div>
+        <div class="flex-end generate-btn-container">
+            <button id="gen-btn" class="btn btn-success" disabled>Generate Schedules</button>
+        </div>
+
+        <h3 class="schedule-header">
+            My Schedule Options
+            <div class="next-prev">
+                <i class="fas fa-angle-left fa-lg sched-icon" onclick="loadPreviousSchedule()"></i>
+                <i class="fas fa-angle-right fa-lg sched-icon" onclick="loadNextSchedule()"></i>
+            </div>
+        </h3>
+        <div class="calendar-container">
+            <div class="days-header">
+                <div class="days-header-inner">
+                    <div class="day">Mon</div>
+                    <div class="day">Tues</div>
+                    <div class="day">Weds</div>
+                    <div class="day">Thurs</div>
+                    <div class="day">Fri</div>
+                </div>
+            </div>
+            <div class="hours-and-calendar-wrapper">
+                <div class="hours-sidebar">
+                    <span class="hour" style="top: 17px">8</span>
+                    <span class="hour" style="top: 77px">9</span>
+                    <span class="hour" style="top: 137px">10</span>
+                    <span class="hour" style="top: 197px">11</span>
+                    <span class="hour" style="top: 257px">12</span>
+                    <span class="hour" style="top: 317px">1</span>
+                    <span class="hour" style="top: 377px">2</span>
+                    <span class="hour" style="top: 437px">3</span>
+                    <span class="hour" style="top: 497px">4</span>
+                    <span class="hour" style="top: 557px">5</span>
+                    <span class="hour" style="top: 617px">6</span>
+                    <span class="hour" style="top: 677px">7</span>
+                    <span class="hour" style="top: 737px">8</span>
+                </div>
+                <div class="calendar-main">
+                    <div id="MO" class="calendar-day">
+                        <div class="class-block color-0">
+                            <span class="class-name">APMA 3080-001</span>
+                            <span class="class-time">12:00pm-1:00pm</span>
+                        </div>
+                        <div class="class-block color-0">
+                            <span class="class-name">CS 2150-001</span>
+                            <span class="class-time">11:00am-11:50am</span>
+                        </div>
+                    </div>
+                    <div id="TU" class="calendar-day"></div>
+                    <div id="WE" class="calendar-day"></div>
+                    <div id="TH" class="calendar-day"></div>
+                    <div id="FR" class="calendar-day"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+<script type="text/javascript" src="{% static 'scheduler/scheduler.js' %}"></script>
