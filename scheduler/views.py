@@ -1,8 +1,6 @@
-from django.conf import settings
 from django.shortcuts import render
 from django.http import JsonResponse
 import pandas as pd
-import os
 import json
 from django.views.decorators.csrf import csrf_exempt
 from copy import copy
