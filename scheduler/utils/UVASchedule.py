@@ -13,6 +13,9 @@ class UVASchedule:
         if init_classes is None:
             init_classes = []
         self.classes = init_classes
+        if init_classes is not None:
+            self.num_credits = sum([int(c.units) for c in self.classes if c.units.isnumeric()])
+
 
     def push_class(self, c):
         """
@@ -25,10 +28,14 @@ class UVASchedule:
         if c in self.classes or does_conflict(self, c):
             return False
         self.classes.append(c)
+        if c.units.isnumeric():
+            self.num_credits += int(c.units)
         return True
 
     def pop_class(self):
-        self.classes.pop()
+        c = self.classes.pop()
+        if c.units.isnumeric():
+            self.num_credits -= int(c.units)
 
     def get_max_class_num(self):
         if len(self.classes) > 0:

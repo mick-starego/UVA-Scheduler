@@ -188,6 +188,34 @@
             background-color: rgba(163, 110, 236, 0.58);
         }
 
+        .color-5 {
+            background-color: rgba(243, 110, 214, 0.58);
+        }
+
+        .color-6 {
+            background-color: rgba(227, 156, 85, 0.58);
+        }
+
+        .color-7 {
+            background-color: rgba(122, 243, 182, 0.58);
+        }
+
+        .color-8 {
+            background-color: rgba(122, 150, 243, 0.58);
+        }
+
+        .color-9 {
+            background-color: rgba(185, 243, 122, 0.58);
+        }
+
+        .color-10 {
+            background-color: rgba(211, 170, 234, 0.58);
+        }
+
+        .color-11 {
+            background-color: rgba(134, 193, 201, 0.58);
+        }
+
         .class-name {
             font-weight: bold;
         }
@@ -425,7 +453,7 @@
     let schedules = [];
     let currentScheduleIndex = 0;
     let colorMap = {};
-    let maxColorIndex = 4;
+    let maxColorIndex = 11;
 
 
     function loadNextSchedule() {
@@ -511,21 +539,11 @@
         const colorIndex = colorMap[c['class_num']];
         const result = [];
 
-        if (dayStr.includes('MO')) {
-            result.push(['MO', buildSingleClassBlock(c.name, timeStr, start, end, colorIndex)]);
-        }
-        if (dayStr.includes('TU')) {
-            result.push(['TU', buildSingleClassBlock(c.name, timeStr, start, end, colorIndex)]);
-        }
-        if (dayStr.includes('WE')) {
-            result.push(['WE', buildSingleClassBlock(c.name, timeStr, start, end, colorIndex)]);
-        }
-        if (dayStr.includes('TH')) {
-            result.push(['TH', buildSingleClassBlock(c.name, timeStr, start, end, colorIndex)]);
-        }
-        if (dayStr.includes('FR')) {
-            result.push(['FR', buildSingleClassBlock(c.name, timeStr, start, end, colorIndex)]);
-        }
+        ['MO', 'TU', 'WE', 'TH', 'FR'].forEach((day) => {
+            if (dayStr.includes(day)) {
+                result.push([day, buildSingleClassBlock(c.name, timeStr, start, end, colorIndex)]);
+            }
+        });
         return result;
     }
 
